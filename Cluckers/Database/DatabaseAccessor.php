@@ -9,44 +9,53 @@ use \PDO as PDO;
  * transactions.
  */
 class DatabaseAccessor {
+  private $dbh;
+
   /**
-   * Returns cluck state of requested channel from database.
+   * Connects to existing database using path to database.
+   *
+   * @param string $path Path to database file, including extension.
+   * @return void.
+   */
+  public function connectToDatabase($path) {
+    $this->dbh = new PDO("sqlite:" . $path);
+  }
+
+  /**
+   * Returns cluck status of requested channel from database.
    * 
    * @param int $channel Channel to access.
-   * @return bool State of requested channel.
+   * @return bool Status of requested channel.
    */
-  public function getCluckState($channel) {
-    // Get db path from project config file
-    $root_path = __DIR__ . "/../../";
-    $f = file_get_contents($root_path . "config/config.json");
-    $config = json_decode($f, true);
-    $db_path = $config["database_path"];
-
+  public function getCluckStatus($channel) {
     // Create SQL connection and query database
-    $dbh = new PDO("sqlite:" . $root_path . $db_path);
-    $stmt = $dbh->prepare(
+    // $dbh = new PDO("sqlite:" . $root_path . $db_path);
+    $stmt = $this->dbh->prepare(
         "SELECT * FROM cluck_status WHERE channel=:channel");
     $stmt->bindParam(":channel", $channel);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Close database connection
-    $dbh = null;
-
     return $result["status"];
   }
 
   /**
-   * Sets cluck state of desired channel in database.
+   * Sets cluck status of desired channel in database.
    *
    * Performs write to sqlite database, so this is a locking operation that
    * will block other transactions while the transaction is occurring.
    *
    * @param int $channel Channel to access.
-   * @param bool $state State to set of requested channel.
+   * @param string $status Status to set of requested channel.
    * @return void.
    */
-  public function setCluckState($channel, $state) {
-
+  public function setCluckStatus($channel, $status) {
+    $stmt = $this->dbh->prepare("
+        UPDATE cluck_status 
+               SET status=:status
+             WHERE channel=:channel;");
+    $stmt->bindParam(":channel", $channel);
+    $stmt->bindParam(":status", $status);
+    $stmt->execute();
   }
 }
