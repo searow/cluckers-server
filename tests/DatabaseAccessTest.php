@@ -1,9 +1,11 @@
 <?php
 
 require_once(__DIR__ . "/../Cluckers/Database/DatabaseAccessor.php");
+require_once(__DIR__ . "/../Cluckers/Config/Config.php");
 
 use \PDO as PDO;
 use PHPUnit\Framework\TestCase as TestCase;
+use Cluckers\Config\Config as Config;
 use Cluckers\Database\DatabaseAccessor as DatabaseAccessor;
 
 class DatabaseAccessTest extends TestCase {
@@ -31,10 +33,14 @@ class DatabaseAccessTest extends TestCase {
 
     $dbh = null;
 
+    // Mock Config will give us our path
+    $mockConfig = $this->createMock(Config::class);
+    $mockConfig->method('getDatabasePath')
+               ->willReturn(self::$testDbFilePath);
+
     // Create accessor object and initialize it with the previously created
     // database to access.
-    $this->accessor = new DatabaseAccessor();
-    $this->accessor->connectToDatabase(self::$testDbFilePath);
+    $this->accessor = new DatabaseAccessor($mockConfig);
   }
 
   public function testCluckStatusReadAndWrite() {

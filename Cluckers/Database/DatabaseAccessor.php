@@ -12,13 +12,26 @@ class DatabaseAccessor {
   private $dbh;
 
   /**
+   * Gets database path from config and opens the database.
+   *
+   * @param Config $config User config object.
+   * @return void.
+   */
+  public function __construct($config) {
+    $databasePath = $config->getDatabasePath();
+    // TODO(searow): add try catch for when database/path is inaccessible, 
+    //               or doesn't exist.
+    $this->dbh = self::connectToDatabase($databasePath);
+  }
+
+  /**
    * Connects to existing database using path to database.
    *
    * @param string $path Path to database file, including extension.
    * @return void.
    */
-  public function connectToDatabase($path) {
-    $this->dbh = new PDO("sqlite:" . $path);
+  private static function connectToDatabase($path) {
+    return new PDO("sqlite:" . $path);
   }
 
   /**
