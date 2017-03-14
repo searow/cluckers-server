@@ -19,11 +19,14 @@ class Config {
   }
 
   /**
-   * Gets database path from config file.
+   * Gets absolute database path from config file.
    *
    * @return string Path database file.
    */
   public function getDatabasePath() {
-    return $this->config["database_path"];
+    // Path in config file is relative to project root, need absolute.
+    $path = __DIR__ . '/../../' . $this->config['database_path'];
+
+    return $path;
   }
 }
