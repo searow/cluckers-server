@@ -61,6 +61,7 @@ class DatabaseAccessor {
    * @return void.
    */
   public function setCluckStatus($channel, $status) {
+    $this->dbh->beginTransaction();
     $stmt = $this->dbh->prepare("
         UPDATE cluck_status 
                SET status=:status
@@ -68,5 +69,6 @@ class DatabaseAccessor {
     $stmt->bindParam(":channel", $channel);
     $stmt->bindParam(":status", $status);
     $stmt->execute();
+    $this->dbh->commit();
   }
 }
