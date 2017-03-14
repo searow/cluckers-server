@@ -23,6 +23,7 @@ class CluckResponse {
 
   /**
    * Sets channel data of response.
+   *
    * @param int $channel Channel that was used.
    * @return void.
    */
@@ -32,6 +33,7 @@ class CluckResponse {
 
   /**
    * Sets status data of response.
+   *
    * @param string $status Status of the channel.
    * @return void.
    */

@@ -41,7 +41,6 @@ class DatabaseAccessor {
    */
   public function getCluckStatus($channel) {
     // Create SQL connection and query database
-    // $dbh = new PDO("sqlite:" . $root_path . $db_path);
     $stmt = $this->dbh->prepare(
         "SELECT * FROM cluck_status WHERE channel=:channel");
     $stmt->bindParam(":channel", $channel);
