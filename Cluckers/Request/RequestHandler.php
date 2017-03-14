@@ -2,9 +2,11 @@
 
 namespace Cluckers\Request;
 
-require_once(__DIR__ . "/../Database/DatabaseAccessor.php");
+require_once(__DIR__ . '/../Database/DatabaseAccessor.php');
+require_once(__DIR__ . '/CluckResponse.php');
 
 use Cluckers\Database\DatabaseAccessor as DatabaseAccessor;
+use Cluckers\Request\CluckResponse as CluckResponse;
 
 /**
  * Handles and processes HTTP request. Main external-facing class.
@@ -63,7 +65,8 @@ class RequestHandler {
   /**
    * Handles GET request.
    *
-   * GET request just checks database data for cluck status.
+   * GET request just checks database data for cluck status. Will print to
+   * HTTP response body here for the actual cluck status response.
    *
    * @return void.
    */
@@ -72,7 +75,11 @@ class RequestHandler {
     $channel = $req['channel'];
     // Ask database for cluck status.
     $status = $this->databaseAccessor->getCluckStatus($channel);
-    print($status);
+    // Prepare and send HTTP response
+    $response = new CluckResponse();
+    $response->setChannel($channel);
+    $response->setStatus($status);
+    print($response->getResponse());
   }
 
   /**
