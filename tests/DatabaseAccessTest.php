@@ -33,14 +33,9 @@ class DatabaseAccessTest extends TestCase {
 
     $dbh = null;
 
-    // Mock Config will give us our path
-    $mockConfig = $this->createMock(Config::class);
-    $mockConfig->method('getDatabasePath')
-               ->willReturn(self::$testDbFilePath);
-
     // Create accessor object and initialize it with the previously created
     // database to access.
-    $this->accessor = new DatabaseAccessor($mockConfig);
+    $this->accessor = new DatabaseAccessor(self::$testDbFilePath);
   }
 
   public function testCluckStatusReadAndWrite() {

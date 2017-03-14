@@ -14,14 +14,13 @@ class DatabaseAccessor {
   /**
    * Gets database path from config and opens the database.
    *
-   * @param Config $config User config object.
+   * @param string $path Path to database file.
    * @return void.
    */
-  public function __construct($config) {
-    $databasePath = $config->getDatabasePath();
+  public function __construct($path) {
     // TODO(searow): add try catch for when database/path is inaccessible, 
     //               or doesn't exist.
-    $this->dbh = self::connectToDatabase($databasePath);
+    $this->dbh = self::connectToDatabase($path);
   }
 
   /**
