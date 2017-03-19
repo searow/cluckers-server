@@ -48,7 +48,7 @@ class RequestHandler {
   private function putHandler() {
     $req = self::decodeUriToData($_SERVER['REQUEST_URI']);
     $channel = $req['channel'];
-    $body = file_get_contents('php://input');
+    $body = trim(file_get_contents('php://input'));
 
     // For this version, only accept 3 different strings. Anything else gets
     // thrown away and result in HTTP 400.
@@ -79,7 +79,12 @@ class RequestHandler {
     $response = new CluckResponse();
     $response->setChannel($channel);
     $response->setStatus($status);
-    print($response->getResponse());
+    $res = $response->getResponse();
+    $len = strlen($res);
+    // Note PHPUnit will error here b/c headers sent already
+    header('Content-Type: text/plain; charset=utf-8');
+    header('Content-Length: ' . $len);
+    print($res);
   }
 
   /**
